@@ -1,0 +1,378 @@
+================================================================================
+                   SISTEMA DE NOTIFICAÇÕES QTILE - DOCUMENTAÇÃO COMPLETA
+================================================================================
+
+Data de Instalação: 02/10/2025
+Sistema: Fedora Linux
+Usuário: vibewill
+Daemon: Dunst 1.12.2
+
+================================================================================
+                              RESUMO DO PROJETO
+================================================================================
+
+Foi implementado um sistema completo de notificações no Qtile usando o Dunst,
+incluindo configuração personalizada, widget na barra e integração com o
+power menu para feedback visual das ações do sistema.
+
+================================================================================
+                           DEPENDÊNCIAS INSTALADAS
+================================================================================
+
+1. DUNST (Daemon de Notificações):
+   - Versão: 1.12.2-1.fc42
+   - Dependência: libXScrnSaver
+   - Comando: sudo dnf install -y dunst
+   - Localização: /usr/bin/dunst
+
+2. JÁ EXISTENTES:
+   - notify-send (libnotify) - /usr/bin/notify-send
+   - Ícones Adwaita Legacy (/usr/share/icons/AdwaitaLegacy/)
+
+================================================================================
+                             ARQUIVOS CRIADOS
+================================================================================
+
+1. CONFIGURAÇÃO DO DUNST:
+   📁 Localização: /home/vibewill/.config/dunst/dunstrc
+   📋 Descrição: Configuração personalizada do daemon de notificações
+   🎨 Tema: Escuro consistente com a barra do Qtile
+   🔧 Função: Define aparência, posição e comportamento das notificações
+
+2. DOCUMENTAÇÃO:
+   📁 Localização: /home/vibewill/Documentos/Sistema_Notificacoes_Qtile.txt
+   📋 Descrição: Este arquivo de documentação
+   🔧 Função: Referência completa do sistema
+
+================================================================================
+                         ARQUIVOS MODIFICADOS
+================================================================================
+
+1. AUTOSTART DO QTILE:
+   📁 Arquivo: /home/vibewill/.config/qtile/autostart.sh
+   📝 Modificação: Adicionado "dunst &" para iniciar automaticamente
+
+2. CONFIGURAÇÃO DO QTILE:
+   📁 Arquivo: /home/vibewill/.config/qtile/config.py
+   📝 Modificação: Adicionado widget de notificação (🔔) na barra
+   📍 Localização: Entre Volume e Botão de Desligar
+
+3. POWER MENU:
+   📁 Arquivo: /home/vibewill/.config/qtile/power-menu.sh
+   📝 Modificação: Adicionadas notificações para ações do sistema
+
+================================================================================
+                          CONFIGURAÇÃO DO DUNST
+================================================================================
+
+APARÊNCIA:
+   - Tema escuro (#2b2b2b) consistente com Qtile
+   - Bordas arredondadas (corner_radius = 10)
+   - Frame azul (#4a9eff) como destaque
+   - Transparência sutil (transparency = 10)
+
+POSICIONAMENTO:
+   - Posição: Canto superior direito
+   - Offset: (10, 50) - 10px da direita, 50px do topo
+   - Largura: 350px
+   - Altura: Dinâmica (0, 200) - mínimo 0, máximo 200px
+
+TIPOGRAFIA:
+   - Fonte: Arial 11
+   - Formato: Título em negrito + corpo
+   - Alinhamento: Esquerda
+   - Quebra automática de linha
+
+ÍCONES:
+   - Tema: Adwaita Legacy
+   - Posição: Esquerda do texto
+   - Tamanho: 32-64px
+   - Busca recursiva habilitada
+
+TIMEOUTS:
+   - Baixa urgência: 5 segundos
+   - Normal: 8 segundos  
+   - Crítica: Infinito (até clicar)
+
+CORES POR URGÊNCIA:
+   - Baixa: Fundo escuro, texto verde (#00ff00)
+   - Normal: Fundo escuro, texto branco (#ffffff)
+   - Crítica: Fundo vermelho (#ff5555), texto preto
+
+================================================================================
+                            WIDGET NA BARRA
+================================================================================
+
+APARÊNCIA:
+   - Ícone: 🔔 (sino)
+   - Cor de fundo: Ciano (colors["cyan"])
+   - Estilo: Arredondado consistente com outros widgets
+   - Posição: Entre Volume e Botão de Desligar
+
+FUNCIONALIDADES:
+   - Clique esquerdo: dunstctl history-pop (mostra última notificação)
+   - Clique direito: dunstctl close-all (fecha todas as notificações)
+   - Visual: Sempre visível como indicador do sistema
+
+CÓDIGO ADICIONADO:
+   ```python
+   # Notificações
+   create_rounded_widget(
+       widget.TextBox,
+       colors["cyan"],
+       "#000000",
+       text="🔔",
+       fontsize=14,
+       mouse_callbacks={
+           'Button1': lazy.spawn('dunstctl history-pop'),
+           'Button3': lazy.spawn('dunstctl close-all')
+       }
+   ),
+   ```
+
+================================================================================
+                        INTEGRAÇÃO COM POWER MENU
+================================================================================
+
+NOTIFICAÇÕES ADICIONADAS:
+   🔒 Bloquear: "🔒 Sistema Bloqueado" - "Tela bloqueada com sucesso"
+   🏠 Logout: "🏠 Logout" - "Saindo do Qtile..."
+   💤 Suspender: "💤 Suspendendo" - "Sistema entrando em suspensão..."
+
+MELHORIAS:
+   - Feedback visual para todas as ações
+   - Delays apropriados para ações críticas
+   - Ícones emoji consistentes
+   - Níveis de urgência apropriados
+
+================================================================================
+                               COMO USAR
+================================================================================
+
+1. NOTIFICAÇÕES AUTOMÁTICAS:
+   - Sistema inicia dunst automaticamente
+   - Aplicações podem enviar notificações
+   - Aparecem no canto superior direito
+
+2. COMANDOS MANUAIS:
+   # Notificação simples
+   notify-send "Título" "Mensagem"
+   
+   # Com urgência
+   notify-send "Título" "Mensagem" -u critical
+   
+   # Com ícone
+   notify-send "Título" "Mensagem" -i dialog-information
+
+3. CONTROLES DO WIDGET:
+   - Clique esquerdo no 🔔: Mostra última notificação
+   - Clique direito no 🔔: Fecha todas as notificações
+
+4. CONTROLES DE TECLADO (nas notificações):
+   - Clique esquerdo: Fecha notificação atual
+   - Clique do meio: Executa ação + fecha
+   - Clique direito: Fecha todas
+
+================================================================================
+                               COMANDOS ÚTEIS
+================================================================================
+
+CONTROLE DO DUNST:
+   dunst &                          # Iniciar dunst
+   killall dunst                    # Parar dunst
+   dunstctl close                   # Fechar notificação atual
+   dunstctl close-all               # Fechar todas
+   dunstctl history-pop             # Mostrar última do histórico
+   dunstctl set-paused true         # Pausar notificações
+   dunstctl set-paused false        # Despausar notificações
+
+ENVIAR NOTIFICAÇÕES:
+   notify-send "Teste"              # Simples
+   notify-send "Título" "Corpo"     # Com título e corpo
+   notify-send -u low "Baixa"       # Baixa urgência
+   notify-send -u normal "Normal"   # Normal (padrão)
+   notify-send -u critical "Crítico" # Crítico
+   notify-send -t 5000 "5 segundos" # Timeout personalizado
+
+TESTE COMPLETO:
+   notify-send "✅ Sucesso" "Tudo funcionando!" -u low
+   notify-send "⚠️ Aviso" "Atenção necessária" -u normal  
+   notify-send "🚨 Erro" "Problema crítico!" -u critical
+
+================================================================================
+                           PERSONALIZAÇÃO
+================================================================================
+
+1. MUDAR POSIÇÃO DAS NOTIFICAÇÕES:
+   - Editar ~/.config/dunst/dunstrc
+   - origin = top-left | top-right | bottom-left | bottom-right
+   - offset = (x, y) - distância das bordas
+
+2. MUDAR CORES:
+   - [urgency_normal] background = "#nova_cor"
+   - [urgency_critical] frame_color = "#nova_cor"
+
+3. MUDAR TIMEOUTS:
+   - timeout = segundos (0 = infinito)
+
+4. MUDAR WIDGET:
+   - Editar config.py, linha ~401
+   - Trocar "🔔" por outro ícone
+   - Mudar colors["cyan"] por outra cor
+
+5. ADICIONAR REGRAS ESPECÍFICAS:
+   [nome_app]
+   appname = "Nome do App"
+   background = "#cor"
+   foreground = "#cor"
+
+================================================================================
+                          RESOLUÇÃO DE PROBLEMAS
+================================================================================
+
+PROBLEMA: Notificações não aparecem
+SOLUÇÃO:
+   1. Verificar se dunst está rodando: ps aux | grep dunst
+   2. Iniciar manualmente: dunst &
+   3. Testar: notify-send "Teste"
+
+PROBLEMA: Configuração não aplicada
+SOLUÇÃO:
+   1. Reiniciar dunst: killall dunst && dunst &
+   2. Verificar sintaxe do dunstrc
+   3. Ver logs: journalctl -f | grep dunst
+
+PROBLEMA: Widget não aparece na barra
+SOLUÇÃO:
+   1. Recarregar Qtile: qtile cmd-obj -o cmd -f reload_config
+   2. Verificar sintaxe do config.py
+   3. Ver se create_rounded_widget está definida
+
+PROBLEMA: Ícones não aparecem
+SOLUÇÃO:
+   1. Verificar caminhos dos ícones no dunstrc
+   2. Instalar ícones: sudo dnf install adwaita-icon-theme
+   3. Atualizar icon_path no dunstrc
+
+PROBLEMA: Erro "height has changed behaviour"
+SOLUÇÃO:
+   1. Usar nova sintaxe: height = (0, 200)
+   2. Atualizar offset: offset = (10, 50)
+
+================================================================================
+                            REGRAS ESPECIAIS
+================================================================================
+
+APLICAÇÕES CONFIGURADAS:
+   - Spotify: Fundo verde (#1db954)
+   - Volume: Fundo azul (#6272a4)
+   - Battery: Fundo laranja (#ffb86c)  
+   - Network: Fundo ciano (#8be9fd)
+
+CORRESPONDÊNCIA:
+   - Por appname (nome do aplicativo)
+   - Por summary (palavra no título)
+   - Cores específicas por categoria
+
+EXEMPLO DE NOVA REGRA:
+   [steam]
+   appname = "Steam"
+   background = "#1b2838"
+   foreground = "#66c0f4"
+
+================================================================================
+                              ESTRUTURA TÉCNICA
+================================================================================
+
+ARQUITETURA:
+   1. Dunst (daemon) escuta notificações D-Bus
+   2. Aplica regras baseadas na configuração
+   3. Exibe notificações com tema personalizado
+   4. Widget permite controle manual
+
+INTEGRAÇÃO QTILE:
+   - Autostart inicia dunst com o sistema
+   - Widget na barra para controle
+   - Power menu envia notificações de feedback
+   - Configuração consistente com tema
+
+DEPENDÊNCIAS D-BUS:
+   - org.freedesktop.Notifications
+   - Protocolo padrão para notificações Linux
+   - Compatível com todas as aplicações
+
+================================================================================
+                               LOCALIZAÇÃO DOS ARQUIVOS
+================================================================================
+
+CONFIGURAÇÃO DUNST:
+   /home/vibewill/.config/dunst/dunstrc
+
+QTILE:
+   /home/vibewill/.config/qtile/config.py (widget na barra)
+   /home/vibewill/.config/qtile/autostart.sh (inicialização)
+   /home/vibewill/.config/qtile/power-menu.sh (notificações power)
+
+DOCUMENTAÇÃO:
+   /home/vibewill/Documentos/Sistema_Notificacoes_Qtile.txt
+
+LOGS:
+   journalctl -u dunst (se usar systemd)
+   ~/.local/share/dunst/ (possíveis logs locais)
+
+================================================================================
+                                BACKUP/RESTORE
+================================================================================
+
+BACKUP COMPLETO:
+   tar -czf notificacoes-backup.tar.gz \
+       ~/.config/dunst/ \
+       ~/.config/qtile/autostart.sh \
+       ~/.config/qtile/power-menu.sh
+
+RESTAURAR:
+   tar -xzf notificacoes-backup.tar.gz -C ~/
+   killall dunst 2>/dev/null
+   dunst &
+   qtile cmd-obj -o cmd -f reload_config
+
+ARQUIVOS CRÍTICOS:
+   ~/.config/dunst/dunstrc (configuração principal)
+   ~/.config/qtile/config.py (widget na barra)
+
+================================================================================
+                                  CRÉDITOS
+================================================================================
+
+DAEMON: Dunst Project (https://dunst-project.org/)
+GERENCIADOR: Qtile Window Manager
+ÍCONES: Adwaita Icon Theme
+SISTEMA: Fedora Linux
+PROTOCOLO: D-Bus Notifications
+
+================================================================================
+                                   VERSÃO
+================================================================================
+
+Versão: 1.0
+Data: 02/10/2025 00:32
+Dunst: 1.12.2
+Qtile: Integrado
+Testado: Fedora Linux + Wayland
+
+================================================================================
+                              STATUS FINAL
+================================================================================
+
+✅ Dunst instalado e configurado
+✅ Tema escuro aplicado
+✅ Widget na barra funcionando
+✅ Power menu com notificações
+✅ Autostart configurado
+✅ Testes realizados com sucesso
+
+SISTEMA OPERACIONAL! Use notify-send para testar ou clique no 🔔 na barra!
+
+================================================================================
+                                    FIM
+================================================================================
