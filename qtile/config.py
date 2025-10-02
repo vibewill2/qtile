@@ -67,7 +67,7 @@ keys = [
     Key([mod],  "g"    , lazy.spawn("google-chrome"), desc="Navegador"),
     Key([mod],  "d"    , lazy.spawn("rofi -show drun"), desc="Menu"),
     Key([mod],  "f"    , lazy.spawn("thunar"), desc="Arquivos"),
-    Key([mod], "p"     , lazy.spawn("waypaper")),
+    Key([mod], "p"     , lazy.spawn("/home/vibewill/.config/waypaper/launch_wallpaper_selector.sh")),
 
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
@@ -389,6 +389,32 @@ screens = [
                 widget.Systray(
                     background=colors["bg"],
                     padding=8
+                ),
+
+                create_widget_spacer(8),
+
+                # Botão de Desligar
+                widget.TextBox(
+                    text="",
+                    background=colors["bg"],
+                    padding=4
+                ),
+                
+                widget.TextBox(
+                    text="⚡",  # Ícone de power
+                    background=colors["red"],
+                    foreground="#000000",
+                    mouse_callbacks={
+                        'Button1': lazy.spawn('/home/vibewill/.config/qtile/power-menu.sh menu')
+                    },
+                    fontsize=16,
+                    padding=12
+                ),
+                
+                widget.TextBox(
+                    text="",
+                    background=colors["bg"],
+                    padding=4
                 ),
 
                 create_separator(size=8),
