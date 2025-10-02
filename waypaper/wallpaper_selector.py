@@ -16,7 +16,7 @@ class WallpaperSelector:
     def __init__(self, root):
         self.root = root
         self.root.title("Seletor de Wallpapers - Use ← → para navegar")
-        self.root.geometry("900x600")
+        self.root.geometry("650x400")
         self.root.configure(bg='#2b2b2b')
         
         # Lista de wallpapers disponíveis
@@ -108,15 +108,15 @@ class WallpaperSelector:
         title_label = tk.Label(
             self.root, 
             text="← → para navegar | Enter aplicar | M para modo | ↑ ↓ conjuntos | ESC sair",
-            font=("Arial", 14, "bold"),
+            font=("Arial", 10, "bold"),
             bg='#2b2b2b',
             fg='white'
         )
-        title_label.pack(pady=10)
+        title_label.pack(pady=2)
         
         # Frame principal para as imagens
         self.main_frame = tk.Frame(self.root, bg='#2b2b2b')
-        self.main_frame.pack(expand=True, fill='both', padx=20, pady=10)
+        self.main_frame.pack(expand=True, fill='both', padx=5, pady=2)
         
         # Frame para cada imagem
         self.image_frames = []
@@ -125,22 +125,22 @@ class WallpaperSelector:
         
         for i in range(3):
             frame = tk.Frame(self.main_frame, bg='#2b2b2b', relief='solid', borderwidth=2)
-            frame.pack(side='left', expand=True, fill='both', padx=5)
+            frame.pack(side='left', expand=True, fill='both', padx=2)
             
             # Label para a imagem
             img_label = tk.Label(frame, bg='#2b2b2b')
-            img_label.pack(expand=True, pady=5)
+            img_label.pack(expand=True, pady=1)
             
             # Label para o nome do arquivo
             name_label = tk.Label(
                 frame, 
                 text="", 
-                font=("Arial", 10),
+                font=("Arial", 8),
                 bg='#2b2b2b',
                 fg='white',
-                wraplength=250
+                wraplength=180
             )
-            name_label.pack(pady=5)
+            name_label.pack(pady=1)
             
             self.image_frames.append(frame)
             self.image_labels.append(img_label)
@@ -150,21 +150,21 @@ class WallpaperSelector:
         self.resize_label = tk.Label(
             self.root,
             text="",
-            font=("Arial", 11),
+            font=("Arial", 8),
             bg='#2b2b2b',
             fg='cyan'
         )
-        self.resize_label.pack(pady=2)
+        self.resize_label.pack(pady=1)
         
         # Status bar
         self.status_label = tk.Label(
             self.root,
             text="",
-            font=("Arial", 12),
+            font=("Arial", 9),
             bg='#2b2b2b',
             fg='yellow'
         )
-        self.status_label.pack(pady=5)
+        self.status_label.pack(pady=2)
         
         self.update_selection_highlight()
     
@@ -177,7 +177,7 @@ class WallpaperSelector:
             try:
                 # Carrega e redimensiona a imagem
                 with Image.open(wallpaper_path) as img:
-                    img.thumbnail((250, 150), Image.Resampling.LANCZOS)
+                    img.thumbnail((180, 120), Image.Resampling.LANCZOS)
                     photo = ImageTk.PhotoImage(img)
                 
                 self.image_labels[i].configure(image=photo)

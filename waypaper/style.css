@@ -1,31 +1,32 @@
-/* CSS simples para waypaper com 3 colunas */
+/* CSS personalizado para waypaper com interface mais espaçosa */
 
-/* Janela principal - muito pequena para mostrar poucos wallpapers */
+/* Janela principal - tamanho maior para melhor visualização */
 window {
-    min-width: 400px;
-    min-height: 180px;
+    min-width: 800px;
+    min-height: 600px;
 }
 
-/* Container com scroll - altura para mostrar apenas 1 linha */
+/* Container com scroll - altura maior para mostrar mais wallpapers */
 scrolledwindow {
-    min-height: 120px;
+    min-height: 450px;
 }
 
-/* Espaçamento do flowbox */
+/* Espaçamento maior do flowbox */
 flowbox {
-    margin: 10px;
+    margin: 20px;
 }
 
-/* Espaçamento dos itens */
+/* Espaçamento maior dos itens */
 flowboxchild {
-    margin: 3px;
-    padding: 3px;
+    margin: 8px;
+    padding: 8px;
 }
 
-/* Botões dos wallpapers */
+/* Botões dos wallpapers maiores */
 button {
-    min-width: 120px;
-    min-height: 80px;
-    margin: 2px;
-    padding: 2px;
+    min-width: 180px;
+    min-height: 120px;
+    margin: 8px;
+    padding: 8px;
+    border-radius: 8px;
 }

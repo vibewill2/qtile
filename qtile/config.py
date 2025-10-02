@@ -29,10 +29,9 @@ keys = [
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
-    Key([mod], "space", lazy.layout.nett(),
-    Key([mod, "control"], "r", lazy.reload_config()),
-
+    Key([mod], "space", lazy.layout.next(),
         desc="Move window focus to other window"),
+    Key([mod, "control"], "r", lazy.reload_config()),
 
     # Move windows between left/right columns or move up/down in current stack.
     # Moving out of range in Columns layout will create new column.
@@ -67,7 +66,7 @@ keys = [
     Key([mod],  "g"    , lazy.spawn("google-chrome"), desc="Navegador"),
     Key([mod],  "d"    , lazy.spawn("rofi -show drun"), desc="Menu"),
     Key([mod],  "f"    , lazy.spawn("thunar"), desc="Arquivos"),
-    Key([mod], "p"     , lazy.spawn("/home/vibewill/.config/waypaper/launch_wallpaper_selector.sh")),
+    Key([mod], "p"     , lazy.spawn("/home/vibewill/.config/waypaper/run_selector.sh")),
 
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
@@ -389,6 +388,21 @@ screens = [
                 widget.Systray(
                     background=colors["bg"],
                     padding=8
+                ),
+
+                create_widget_spacer(8),
+
+                # Notificações
+                create_rounded_widget(
+                    widget.TextBox,
+                    colors["cyan"],
+                    "#000000",
+                    text="🔔",
+                    fontsize=14,
+                    mouse_callbacks={
+                        'Button1': lazy.spawn('dunstctl history-pop'),
+                        'Button3': lazy.spawn('dunstctl close-all')
+                    }
                 ),
 
                 create_widget_spacer(8),
