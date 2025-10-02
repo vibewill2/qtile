@@ -1,0 +1,243 @@
+================================================================================
+                        BOTÃO DE DESLIGAR - QTILE - DOCUMENTAÇÃO
+================================================================================
+
+Data de Instalação: 01/10/2025 23:54
+Sistema: Fedora Linux
+Usuário: vibewill
+
+================================================================================
+                                  RESUMO
+================================================================================
+
+Foi adicionado um botão de desligar (⚡) na barra do Qtile que abre um menu
+com opções de energia: Bloquear, Logout, Suspender, Reiniciar e Desligar.
+
+================================================================================
+                            ARQUIVOS MODIFICADOS
+================================================================================
+
+1. CONFIGURAÇÃO DO QTILE:
+   📁 Arquivo: /home/vibewill/.config/qtile/config.py
+   📍 Localização: Linha ~396-418 (seção da barra)
+   
+   CÓDIGO ADICIONADO:
+   ```python
+   # Botão de Desligar
+   widget.TextBox(
+       text="",
+       background=colors["bg"],
+       padding=4
+   ),
+   
+   widget.TextBox(
+       text="⚡",  # Ícone de power
+       background=colors["red"],
+       foreground="#000000",
+       mouse_callbacks={
+           'Button1': lazy.spawn('/home/vibewill/.config/qtile/power-menu.sh menu')
+       },
+       fontsize=16,
+       padding=12
+   ),
+   
+   widget.TextBox(
+       text="",
+       background=colors["bg"],
+       padding=4
+   ),
+   ```
+
+================================================================================
+                             ARQUIVOS CRIADOS
+================================================================================
+
+1. SCRIPT DO MENU DE ENERGIA:
+   📁 Localização: /home/vibewill/.config/qtile/power-menu.sh
+   🔧 Função: Menu interativo com opções de energia
+   ⚙️  Executável: sim (chmod +x)
+   📋 Descrição: Script bash que mostra menu via rofi/dmenu
+
+2. DOCUMENTAÇÃO:
+   📁 Localização: /home/vibewill/Documentos/Botao_Desligar_Qtile.txt
+   📋 Descrição: Este arquivo de documentação
+
+================================================================================
+                           DEPENDÊNCIAS INSTALADAS
+================================================================================
+
+1. SWAYLOCK:
+   - Bloqueador de tela para Wayland
+   - Comando: sudo dnf install -y swaylock
+   - Localização: /usr/bin/swaylock
+
+2. JÁ EXISTENTES:
+   - rofi (menu launcher) - /usr/bin/rofi
+   - systemctl (controle do sistema)
+   - qtile (gerenciador de janelas)
+
+================================================================================
+                              FUNCIONALIDADES
+================================================================================
+
+1. BOTÃO NA BARRA:
+   - Ícone: ⚡ (raio em fundo vermelho)
+   - Posição: Final da barra, antes do separador
+   - Ação: Clique esquerdo abre menu de energia
+
+2. OPÇÕES DO MENU:
+   🔒 Bloquear    - Bloqueia a tela (swaylock)
+   🏠 Logout      - Sai do Qtile
+   💤 Suspender   - Coloca sistema em suspensão
+   🔄 Reiniciar   - Reinicia o sistema (com confirmação)
+   ⚡ Desligar    - Desliga o sistema (com confirmação)
+   ❌ Cancelar    - Fecha o menu sem fazer nada
+
+3. CONFIRMAÇÕES DE SEGURANÇA:
+   - Reiniciar e Desligar pedem confirmação
+   - Usa zenity (gráfico) ou rofi para confirmação
+   - Previne desligamentos acidentais
+
+4. FALLBACKS:
+   - Prioridade: rofi > dmenu > zenity
+   - Se nenhum menu disponível, mostra erro
+   - Múltiplos bloqueadores: swaylock > i3lock > loginctl
+
+================================================================================
+                               COMO USAR
+================================================================================
+
+1. CLIQUE NO BOTÃO:
+   - Clique no ícone ⚡ na barra do Qtile
+   - Menu aparecerá com as opções
+
+2. ATALHOS DE TECLADO (no menu):
+   - Setas ↑↓ para navegar
+   - Enter para confirmar
+   - Esc para cancelar
+
+3. EXECUÇÃO MANUAL:
+   bash /home/vibewill/.config/qtile/power-menu.sh menu
+
+================================================================================
+                           COMANDOS EXECUTADOS
+================================================================================
+
+BLOQUEAR TELA:
+   swaylock --color 000000 --inside-color 1e1e1e --ring-color 333333 --key-hl-color 00ff00 --text-color ffffff
+
+LOGOUT:
+   qtile cmd-obj -o cmd -f shutdown
+
+SUSPENDER:
+   systemctl suspend
+
+REINICIAR (com confirmação):
+   systemctl reboot
+
+DESLIGAR (com confirmação):
+   systemctl poweroff
+
+================================================================================
+                           PERSONALIZAÇÃO
+================================================================================
+
+1. MUDAR ÍCONE DO BOTÃO:
+   - Editar config.py linha ~404
+   - Substituir "⚡" por outro ícone Unicode
+   - Exemplos: 🔌 ⏻ 🔴 ⭕
+
+2. MUDAR COR DO BOTÃO:
+   - Editar config.py linha ~405
+   - Substituir colors["red"] por outra cor
+   - Opções: colors["green"], colors["blue"], etc.
+
+3. ADICIONAR OUTRAS OPÇÕES:
+   - Editar power-menu.sh
+   - Adicionar nova opção na variável $options
+   - Adicionar case correspondente no switch
+
+4. MUDAR MENU:
+   - Instalar dmenu: sudo dnf install dmenu
+   - O script detecta automaticamente qual usar
+
+================================================================================
+                          RESOLUÇÃO DE PROBLEMAS
+================================================================================
+
+PROBLEMA: Botão não aparece na barra
+SOLUÇÃO:
+   1. Verificar se config.py foi salvo
+   2. Recarregar Qtile: qtile cmd-obj -o cmd -f reload_config
+   3. Verificar sintaxe do Python
+
+PROBLEMA: Menu não abre ao clicar
+SOLUÇÃO:
+   1. Verificar permissão: chmod +x power-menu.sh
+   2. Testar manualmente: ./power-menu.sh menu
+   3. Verificar se rofi está instalado
+
+PROBLEMA: Bloqueio de tela não funciona
+SOLUÇÃO:
+   1. Instalar swaylock: sudo dnf install swaylock
+   2. Testar: swaylock --color 000000
+   3. Verificar se está no Wayland
+
+PROBLEMA: Confirmação não aparece
+SOLUÇÃO:
+   1. Instalar zenity: sudo dnf install zenity
+   2. Testar rofi: rofi --version
+   3. Verificar logs: journalctl -f
+
+================================================================================
+                              ESTRUTURA DO CÓDIGO
+================================================================================
+
+SCRIPT power-menu.sh:
+   - Função menu(): Mostra opções usando rofi/dmenu/zenity
+   - Função power-menu(): Compatibilidade com rofi modi
+   - Switch case: Executa ação baseada na escolha
+   - Confirmações: Diálogos de segurança para ações perigosas
+
+WIDGET no config.py:
+   - TextBox com ícone ⚡
+   - mouse_callbacks para detectar clique
+   - Estilo consistente com tema (bordas arredondadas)
+   - Posicionamento no final da barra
+
+================================================================================
+                               LOCALIZAÇÃO DOS ARQUIVOS
+================================================================================
+
+CONFIGURAÇÃO:
+   /home/vibewill/.config/qtile/config.py (linhas ~396-418)
+
+SCRIPTS:
+   /home/vibewill/.config/qtile/power-menu.sh
+
+DOCUMENTAÇÃO:
+   /home/vibewill/Documentos/Botao_Desligar_Qtile.txt
+
+BACKUP RECOMENDADO:
+   tar -czf qtile-power-button-backup.tar.gz ~/.config/qtile/
+
+================================================================================
+                                   CRÉDITOS
+================================================================================
+
+SISTEMA: Qtile Window Manager
+MENU: rofi/dmenu
+BLOQUEIO: swaylock
+SISTEMA OPERACIONAL: Fedora Linux
+
+================================================================================
+                                    VERSÃO
+================================================================================
+
+Versão: 1.0
+Data: 01/10/2025 23:54
+Testado em: Fedora Linux + Qtile + Wayland
+
+================================================================================
+                                     FIM
+================================================================================
