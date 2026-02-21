@@ -54,6 +54,8 @@ keys = [
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
 
+    Key([mod], "b", lazy.function(lambda qtile: trocar_wallpaper())),
+
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
@@ -63,9 +65,9 @@ keys = [
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     
     # Meus apps
-    Key([mod],  "g"    , lazy.spawn("google-chrome"), desc="Navegador"),
+    Key([mod],  "g"    , lazy.spawn("vivaldi"), desc="Vivaldi"),
     Key([mod],  "d"    , lazy.spawn("rofi -show drun"), desc="Menu"),
-    Key([mod],  "f"    , lazy.spawn("thunar"), desc="Arquivos"),
+    Key([mod],  "f"    , lazy.spawn("nemo"), desc="Arquivos"),
     Key([mod], "p"     , lazy.spawn("/home/vibewill/.config/waypaper/run_selector.sh")),
 
     # Toggle between different layouts as defined below
@@ -100,10 +102,10 @@ for i in groups:
     ])
 
 layouts = [
-    layout.Tile(margin = 15),
     layout.Columns(border_focus_stack='#d75f5f',
-        margin = 2,
+        margin = 15,
     ),
+    layout.Tile(margin = 15),
     layout.Max(),
     # Try more layouts by unleashing below layouts.
     layout.Stack(num_stacks=2),
@@ -488,5 +490,12 @@ focus_on_window_activation = "smart"
 def autostart():
     home = os.path.expanduser('~')
     subprocess.Popen([home + '/.config/qtile/autostart.sh'])
+
+def trocar_wallpaper():
+    subprocess.Popen(
+        "feh --recursive --randomize --bg-fill ~/Imagens/wallpapers",
+        shell=True
+    )
+
 
 wmname = "qtile"
