@@ -297,6 +297,19 @@ screens = [
 
                 create_widget_spacer(8),
 
+                # Cava - Visualizador de Áudio
+                create_rounded_widget(
+                    widget.GenPollCommand,
+                    colors["cyan"],
+                    "#000000",
+                    cmd="~/.config/qtile/cava_widget.py",
+                    update_interval=0.05,
+                    shell=True,
+                    fmt="🎵 {}"
+                ),
+
+                create_widget_spacer(8),
+
                 # Teclado
                 create_rounded_widget(
                     widget.KeyboardLayout,
