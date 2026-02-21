@@ -1,3 +1,5 @@
 #!/bin/bash
-swww-daemon &
+picom --config ~/.config/picom/picom.conf &
 dunst &
+~/.fehbg &
+swww-daemon &
