@@ -33,12 +33,11 @@ keys = [
     Key([mod], "n", lazy.layout.normalize()),
     Key([mod], "b", lazy.function(lambda qtile: trocar_wallpaper())),
     Key([mod, "shift"], "Return", lazy.layout.toggle_split()),
-    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
+    Key([mod], "Return", lazy.spawn(terminal)),
     
-    # Meus apps
-    Key([mod], "g", lazy.spawn("vivaldi"), desc="Vivaldi"),
-    Key([mod], "d", lazy.spawn("rofi -show drun"), desc="Menu"),
-    Key([mod], "f", lazy.spawn("nemo"), desc="Arquivos"),
+    Key([mod], "g", lazy.spawn("vivaldi")),
+    Key([mod], "d", lazy.spawn("rofi -show drun")),
+    Key([mod], "f", lazy.spawn("nemo")),
     Key([mod], "p", lazy.spawn("/home/vibewill/.config/waypaper/run_selector.sh")),
     Key([mod], "Tab", lazy.next_layout()),
     Key([mod], "w", lazy.window.kill()),
@@ -46,7 +45,6 @@ keys = [
     Key([mod, "control"], "q", lazy.shutdown()),
 ]
 
-# --- Grupos ---
 groups = [Group(str(i)) for i in (1, 2, 3, 4, 5, 6, 7, 8, 9)]
 for i in groups:
     keys.extend([
@@ -54,14 +52,12 @@ for i in groups:
         Key([mod, "shift"], i.name, lazy.window.togroup(i.name, switch_group=True)),
     ])
 
-# --- Layouts ---
 layouts = [
     layout.Columns(border_focus=colors["purple"], margin=12, border_width=2),
     layout.Max(),
     layout.MonadTall(margin=12, border_focus=colors["purple"]),
 ]
 
-# --- Configurações de Widget ---
 widget_defaults = dict(
     font=font_config["font"],
     fontsize=font_config["fontsize"],
@@ -70,24 +66,22 @@ widget_defaults = dict(
 )
 extension_defaults = widget_defaults.copy()
 
-# --- Funções Powerline ---
+# --- Powerline ---
 def get_powerline(direction='left', fg=colors["bg"], bg=colors["bg"]):
-    """Cria a flecha do powerline com as cores corretas"""
     text = "" if direction == 'left' else ""
     return widget.TextBox(
         text=text,
         background=bg,
         foreground=fg,
         padding=0,
-        fontsize=28  # Ajustado para preencher a altura da barra
+        fontsize=28
     )
 
-# --- Screens e Barra ---
+# --- Screens ---
 screens = [
     Screen(
         top=bar.Bar(
             [
-                # ESQUERDA
                 widget.CurrentLayout(
                     background=colors["purple"],
                     foreground="#000000",
@@ -112,19 +106,27 @@ screens = [
 
                 widget.Spacer(),
 
-                # DIREITA (Sequência de Powerline)
-                
-                # Música
+                # 🎵 Música
                 get_powerline('left', colors["orange"], colors["bg"]),
                 widget.Cmus(
                     background=colors["orange"],
                     foreground="#000000",
                     format=" ♫ {artist} - {title} ",
-                    play_color="#000000",
+                ),
+
+                # 🔥 CAVA (CORRIGIDO)
+                get_powerline('left', colors["cyan"], colors["orange"]),
+                widget.GenPollCommand(
+                    background=colors["cyan"],
+                    foreground="#000000",
+                    cmd="~/.config/qtile/cava_widget.py",
+                    update_interval=0.05,
+                    shell=True,
+                    fmt=" {} "
                 ),
 
                 # Teclado
-                get_powerline('left', colors["yellow"], colors["orange"]),
+                get_powerline('left', colors["yellow"], colors["cyan"]),
                 widget.KeyboardLayout(
                     background=colors["yellow"],
                     foreground="#000000",
@@ -172,10 +174,9 @@ screens = [
                     format="  %H:%M ",
                 ),
 
-                # Fim da linha (Systray e Power)
                 get_powerline('left', colors["bg"], colors["purple"]),
                 widget.Systray(padding=10),
-                
+
                 widget.TextBox(
                     text=" ⏻ ",
                     background=colors["red"],
@@ -192,10 +193,9 @@ screens = [
     ),
 ]
 
-# --- Mouse e Outros ---
 mouse = [
-    Drag([mod], "Button1", lazy.window.set_position_floating(), start=lazy.window.get_position()),
-    Drag([mod], "Button3", lazy.window.set_size_floating(), start=lazy.window.get_size()),
+    Drag([mod], "Button1", lazy.window.set_position_floating()),
+    Drag([mod], "Button3", lazy.window.set_size_floating()),
     Click([mod], "Button2", lazy.window.bring_to_front())
 ]
 
@@ -208,11 +208,9 @@ auto_fullscreen = True
 focus_on_window_activation = "smart"
 wmname = "qtile"
 
-# --- Hooks ---
 @hook.subscribe.startup_once
 def autostart():
-    home = os.path.expanduser('~')
-    subprocess.Popen([home + '/.config/qtile/autostart.sh'])
+    subprocess.Popen([os.path.expanduser('~/.config/qtile/autostart.sh')])
 
 def trocar_wallpaper():
     subprocess.Popen("feh --recursive --randomize --bg-fill ~/Imagens/wallpapers", shell=True)
